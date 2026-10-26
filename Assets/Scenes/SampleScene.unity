@@ -247,6 +247,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 2dd4002fe5a7ab141bba1f1675a87b1e, type: 3}
     volume: 1
     delay: 0
+  - name: sword_swing
+    clip: {fileID: 8300000, guid: 95ab296c8fe4d9740ab3dc8ae7131064, type: 3}
+    volume: 1
+    delay: 0
 --- !u!82 &1960697114
 AudioSource:
   m_ObjectHideFlags: 0
