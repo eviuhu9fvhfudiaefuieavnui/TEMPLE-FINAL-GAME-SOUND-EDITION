@@ -251,6 +251,18 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 95ab296c8fe4d9740ab3dc8ae7131064, type: 3}
     volume: 1
     delay: 0
+  - name: coin_pickup
+    clip: {fileID: 8300000, guid: 3e9afae52d064d844b2a265630a5806b, type: 3}
+    volume: 1
+    delay: 0
+  - name: medallion_pickup
+    clip: {fileID: 8300000, guid: b11411cb1b4d73548b60aa0cda360936, type: 3}
+    volume: 1
+    delay: 0
+  - name: key_pickup
+    clip: {fileID: 8300000, guid: acef46f5974b09e419862ccaf494ac9c, type: 3}
+    volume: 1
+    delay: 0
 --- !u!82 &1960697114
 AudioSource:
   m_ObjectHideFlags: 0
