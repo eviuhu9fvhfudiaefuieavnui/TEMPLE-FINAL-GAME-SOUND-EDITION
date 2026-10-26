@@ -219,7 +219,6 @@ GameObject:
   - component: {fileID: 1960697114}
   - component: {fileID: 1960697113}
   - component: {fileID: 1960697116}
-  - component: {fileID: 1960697117}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -242,6 +241,10 @@ MonoBehaviour:
   sounds:
   - name: crossbow_fire
     clip: {fileID: 8300000, guid: dbb75da68d06c45469ba02fe933881e3, type: 3}
+    volume: 1
+    delay: 0
+  - name: musket_fire
+    clip: {fileID: 8300000, guid: 2dd4002fe5a7ab141bba1f1675a87b1e, type: 3}
     volume: 1
     delay: 0
 --- !u!82 &1960697114
@@ -451,15 +454,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1960697117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960697112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdb3bf1bcfd9efd44b9bdea9d0fe0caa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
