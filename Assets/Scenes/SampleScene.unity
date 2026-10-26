@@ -263,6 +263,18 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: acef46f5974b09e419862ccaf494ac9c, type: 3}
     volume: 1
     delay: 0
+  - name: zombie_call
+    clip: {fileID: 8300000, guid: 521347f20652c9249b94cac064c0eaff, type: 3}
+    volume: 1
+    delay: 0
+  - name: zombie_hit
+    clip: {fileID: 8300000, guid: 4de4be77a716d074086e044440beb0a2, type: 3}
+    volume: 1
+    delay: 0
+  - name: zombie_death
+    clip: {fileID: 8300000, guid: 0b969c5bb91d4484c9f31ab6f98d3866, type: 3}
+    volume: 1
+    delay: 0
 --- !u!82 &1960697114
 AudioSource:
   m_ObjectHideFlags: 0
