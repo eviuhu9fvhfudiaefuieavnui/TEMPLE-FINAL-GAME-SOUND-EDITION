@@ -253,7 +253,7 @@ MonoBehaviour:
     delay: 0
   - name: coin_pickup
     clip: {fileID: 8300000, guid: 3e9afae52d064d844b2a265630a5806b, type: 3}
-    volume: 1
+    volume: 0.521
     delay: 0
   - name: medallion_pickup
     clip: {fileID: 8300000, guid: b11411cb1b4d73548b60aa0cda360936, type: 3}
@@ -277,6 +277,18 @@ MonoBehaviour:
     delay: 0
   - name: menu_music
     clip: {fileID: 8300000, guid: 3e1c8c876e86d714a93802acca4c6539, type: 3}
+    volume: 0.5
+    delay: 0
+  - name: spike_trap
+    clip: {fileID: 8300000, guid: bd4f1e193c93bc646a87f251305c5415, type: 3}
+    volume: 0.5
+    delay: 0
+  - name: door_open
+    clip: {fileID: 8300000, guid: 4b09c117f5cb2f44f9906dde6a289aa4, type: 3}
+    volume: 0.5
+    delay: 0
+  - name: door_close
+    clip: {fileID: 8300000, guid: e84929faedf0014499f192e6d440e54e, type: 3}
     volume: 0.5
     delay: 0
 --- !u!82 &1960697114
