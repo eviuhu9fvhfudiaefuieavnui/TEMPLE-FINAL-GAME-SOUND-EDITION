@@ -253,7 +253,7 @@ MonoBehaviour:
     delay: 0
   - name: coin_pickup
     clip: {fileID: 8300000, guid: 3e9afae52d064d844b2a265630a5806b, type: 3}
-    volume: 0.521
+    volume: 0.5
     delay: 0
   - name: medallion_pickup
     clip: {fileID: 8300000, guid: b11411cb1b4d73548b60aa0cda360936, type: 3}
@@ -290,6 +290,10 @@ MonoBehaviour:
   - name: door_close
     clip: {fileID: 8300000, guid: e84929faedf0014499f192e6d440e54e, type: 3}
     volume: 0.5
+    delay: 0
+  - name: footstep_stone
+    clip: {fileID: 8300000, guid: d7b3c0f6768f79b418a75e611d3f95a6, type: 3}
+    volume: 0.7
     delay: 0
 --- !u!82 &1960697114
 AudioSource:
