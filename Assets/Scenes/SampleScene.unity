@@ -315,6 +315,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: cc414c3a3c2aea04495096ca0f431e70, type: 3}
     volume: 1
     delay: 0
+  - name: boss_growl
+    clip: {fileID: 8300000, guid: 432ade1bf870d6c4da8c7dd66ab92b04, type: 3}
+    volume: 0.7
+    delay: 0
+  - name: boss_death
+    clip: {fileID: 8300000, guid: 2ac0fd8ec5c6d1848926a2ecfbdf27b5, type: 3}
+    volume: 0.7
+    delay: 0
 --- !u!82 &1960697114
 AudioSource:
   m_ObjectHideFlags: 0
