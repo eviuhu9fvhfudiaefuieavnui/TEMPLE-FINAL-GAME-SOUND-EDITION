@@ -1,112 +1,112 @@
-using System.Collections;           // lets us use coroutines (code that waits, then keeps going)
-using System.Collections.Generic;   // lets us use Dictionary (a lookup table: name -> sound)
-using UnityEngine;                  // lets us use Unity things like AudioSource and MonoBehaviour
+using System.Collections;           
+using System.Collections.Generic;   
+using UnityEngine;                  
 
-// This script is the sound manager. It plays every sound in the game.
-// Other scripts call it by name, like: AudioManager.Instance.PlaySFX("gold_pickup");
-[RequireComponent(typeof(AudioSource))]   // Unity makes sure this object has an AudioSource (we need 2, see Awake)
-public class AudioManager : MonoBehaviour // makes a script that can sit on an object in the game
+// Sound manager. Plays all sounds by name.
+// Example: AudioManager.Instance.PlaySFX("coin_pickup");
+[RequireComponent(typeof(AudioSource))]   // needs an AudioSource on this object (we use two)
+public class AudioManager : MonoBehaviour // script that sits on a game object
 {
-    public static AudioManager Instance { get; private set; } // the one AudioManager in the game. Other scripts use this to reach it
+    public static AudioManager Instance { get; private set; } // the single shared copy, used by other scripts
 
-    [System.Serializable]           // lets Unity show this class in the Inspector, so you can fill it in
-    public class SoundEntry         // one sound, with its settings
+    [System.Serializable]           // shows this class in the Inspector
+    public class SoundEntry         // one sound and its settings
     {
-        public string name;         // the name we type to play it, like "gold_pickup". Must match the sound list
-        public AudioClip clip;      // the sound file itself (drag it in on the Inspector)
-        [Range(0f, 1f)]             // shows a slider in the Inspector from 0 (silent) to 1 (full volume)
-        public float volume = 1f;   // how loud this sound is. 1 = full volume
-        public float delay = 0f;    // how many seconds to wait before playing. 0 = play right away
+        public string name;         // name used to play it, like "coin_pickup"
+        public AudioClip clip;      // the sound file
+        [Range(0f, 1f)]             // slider from 0 to 1 in the Inspector
+        public float volume = 1f;   // loudness. 1 = full
+        public float delay = 0f;    // seconds to wait before playing. 0 = play now
     }
 
-    [SerializeField]                // shows this list in the Inspector even though it is private
-    private SoundEntry[] sounds;    // the list of all our sounds. You fill this in on the Inspector
+    [SerializeField]                // show in Inspector even though it is private
+    private SoundEntry[] sounds;    // list of all sounds, filled in on the Inspector
 
-    private AudioSource sfxSource;  // the player used for short sound effects (shots, pickups, clicks)
-    private AudioSource musicSource;// the player used for background music (it loops)
-    private Dictionary<string, SoundEntry> lookup; // fast lookup: type a name, get that sound's settings back
+    private AudioSource sfxSource;  // plays short sound effects
+    private AudioSource musicSource;// plays music (loops)
+    private Dictionary<string, SoundEntry> lookup; // name -> sound lookup
 
-    private void Awake()            // Unity runs this once, right when the game starts
+    private void Awake()            // runs once when the game starts
     {
-        if (Instance != null && Instance != this) // if another AudioManager already exists...
+        if (Instance != null && Instance != this) // another manager already exists
         {
-            Destroy(gameObject);    // ...delete this copy, so there is only ever one
-            return;                 // stop here, we do not need to set anything up again
+            Destroy(gameObject);    // remove this copy
+            return;                 // stop, the first one is already set up
         }
-        Instance = this;            // this is the one AudioManager, so save it
-        DontDestroyOnLoad(gameObject); // keep this object alive when we change levels/scenes
+        Instance = this;            // save this as the single manager
+        DontDestroyOnLoad(gameObject); // keep it alive between levels
 
-        AudioSource[] sources = GetComponents<AudioSource>(); // find all Audio Source parts on this object
-        if (sources.Length < 2)     // if there are fewer than 2...
+        AudioSource[] sources = GetComponents<AudioSource>(); // get all Audio Sources on this object
+        if (sources.Length < 2)     // need at least two
         {
-            Debug.LogError("AudioManager: needs two Audio Source components on this object."); // show an error in the Console
+            Debug.LogError("AudioManager: needs two Audio Source components on this object."); // error in Console
         }
-        else                        // we have at least 2
+        else                        // enough sources
         {
-            sfxSource = sources[0];     // the first Audio Source is for sound effects
-            musicSource = sources[1];   // the second Audio Source is for music
+            sfxSource = sources[0];     // first one = sound effects
+            musicSource = sources[1];   // second one = music
         }
 
-        lookup = new Dictionary<string, SoundEntry>(); // make an empty lookup table
-        foreach (var entry in sounds)   // go through every sound in the list, one at a time
+        lookup = new Dictionary<string, SoundEntry>(); // empty lookup table
+        foreach (var entry in sounds)   // check each sound in the list
         {
-            if (string.IsNullOrEmpty(entry.name) || entry.clip == null) // if it has no name or no sound file...
+            if (string.IsNullOrEmpty(entry.name) || entry.clip == null) // missing name or file
             {
-                Debug.LogWarning("AudioManager: sound entry missing a name or clip."); // warn in the Console
-                continue;           // skip this one and go to the next
+                Debug.LogWarning("AudioManager: sound entry missing a name or clip."); // warning in Console
+                continue;           // skip it
             }
-            if (lookup.ContainsKey(entry.name)) // if this name is already in the table...
+            if (lookup.ContainsKey(entry.name)) // name already used
             {
-                Debug.LogWarning($"AudioManager: duplicate sound name '{entry.name}'."); // warn about the copy
+                Debug.LogWarning($"AudioManager: duplicate sound name '{entry.name}'."); // warning in Console
                 continue;           // skip the duplicate
             }
-            lookup.Add(entry.name, entry); // add this sound to the table under its name
+            lookup.Add(entry.name, entry); // add to the table
         }
     }
 
-    // Plays a short sound effect once. Use for shots, pickups, clicks, enemy sounds.
-    public void PlaySFX(string soundName) // soundName is the name we type, like "crossbow_fire"
+    // Plays one short sound effect (shots, pickups, clicks, enemies).
+    public void PlaySFX(string soundName) // soundName, like "crossbow_fire"
     {
-        if (sfxSource == null || !TryGet(soundName, out SoundEntry entry)) return; // if no player or no sound, do nothing
+        if (sfxSource == null || !TryGet(soundName, out SoundEntry entry)) return; // no player or no sound, stop
 
-        if (entry.delay > 0f)           // if this sound should wait first...
-            StartCoroutine(PlayAfterDelay(entry)); // ...start the waiting routine
-        else                            // no wait needed
-            sfxSource.PlayOneShot(entry.clip, entry.volume); // play the sound once, right now, at its volume
+        if (entry.delay > 0f)           // delay set
+            StartCoroutine(PlayAfterDelay(entry)); // wait, then play
+        else                            // no delay
+            sfxSource.PlayOneShot(entry.clip, entry.volume); // play now
     }
 
-    // Plays background music. It loops, and replaces whatever music was playing before.
-    public void PlayMusic(string soundName) // soundName is the name of the music, like "level_music"
+    // Plays looping background music. Replaces any music already playing.
+    public void PlayMusic(string soundName) // soundName, like "level_music"
     {
-        if (musicSource == null || !TryGet(soundName, out SoundEntry entry)) return; // if no player or no music, do nothing
+        if (musicSource == null || !TryGet(soundName, out SoundEntry entry)) return; // no player or no music, stop
 
-        musicSource.clip = entry.clip;      // put this music track in the music player
-        musicSource.volume = entry.volume;  // set how loud the music is
-        musicSource.loop = true;            // play it again and again when it finishes
-        musicSource.Play();                 // start the music
+        musicSource.clip = entry.clip;      // set the track
+        musicSource.volume = entry.volume;  // set the volume
+        musicSource.loop = true;            // repeat when it ends
+        musicSource.Play();                 // start
     }
 
-    // Stops the music (for example when the game ends).
-    public void StopMusic()                 // a command other scripts can call
+    // Stops the music. Other scripts can call this, like when the game ends.
+    public void StopMusic()                 // command other scripts can use
     {
-        if (musicSource != null) musicSource.Stop(); // if the music player exists, stop it
+        if (musicSource != null) musicSource.Stop(); // stop if the player exists
     }
 
-    // Waits for the delay, then plays the sound. Used when a sound needs to line up with an animation.
-    private IEnumerator PlayAfterDelay(SoundEntry entry) // a routine that can pause in the middle
+    // Waits for the delay, then plays the sound.
+    private IEnumerator PlayAfterDelay(SoundEntry entry) // routine that can pause
     {
-        yield return new WaitForSeconds(entry.delay); // pause for the number of seconds in the delay setting
-        sfxSource.PlayOneShot(entry.clip, entry.volume); // then play the sound once
+        yield return new WaitForSeconds(entry.delay); // wait the delay time
+        sfxSource.PlayOneShot(entry.clip, entry.volume); // play the sound
     }
 
-    // Looks up a sound by name. Returns true if found, and gives back its settings through "entry".
-    private bool TryGet(string soundName, out SoundEntry entry) // out means this function hands back the sound
+    // Finds a sound by name. Returns true if found, and sends the sound back through "entry".
+    private bool TryGet(string soundName, out SoundEntry entry) // out = sends the result back
     {
-        if (lookup != null && lookup.TryGetValue(soundName, out entry)) // if the table has this name...
-            return true;                    // ...say we found it
+        if (lookup != null && lookup.TryGetValue(soundName, out entry)) // name is in the table
+            return true;                    // found it
 
-        Debug.LogWarning($"AudioManager: no sound named '{soundName}'."); // no match, so warn in the Console
-        entry = null;                       // hand back nothing, because there is no sound
-        return false;                       // say we did not find it
+        Debug.LogWarning($"AudioManager: no sound named '{soundName}'."); // not found, warning in Console
+        entry = null;                       // nothing to send back
+        return false;                       // not found
     }
 }
